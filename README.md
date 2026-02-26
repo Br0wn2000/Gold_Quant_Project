@@ -1,193 +1,194 @@
+[🇨🇳 中文版](README_CN.md)
+
 # 🥇 Gold Quant Project
 
-> 现货黄金（XAUUSD）量化交易系统 — 多级别多策略通道分析 + 历史回测
+> XAUUSD Quantitative Trading System — Multi-Timeframe Multi-Strategy Channel Analysis + Backtesting
 
-一个基于 Python 的黄金量化交易项目，涵盖**数据获取、技术指标计算、多策略通道分析、多周期回测以及实盘交易接口**的完整量化交易流程。
+A Python-based quantitative trading project for gold, covering the complete pipeline: **data acquisition → technical indicators → multi-strategy channel analysis → multi-period backtesting → live trading interface**.
 
 ---
 
-## 📁 项目结构
+## 📁 Project Structure
 
 ```
 Gold_Quant_Project/
-├── analysis/                    # 通道分析模块
-│   ├── channel_analyzer.py      # 多级别通道分析器（聚合多策略 + 共识判断）
-│   └── strategies.py            # 4 种通道分析策略（线性回归/布林带/唐奇安/趋势线）
-├── backtest/                    # 回测引擎
-│   └── engine.py                # 基于 Backtrader 的回测引擎封装
-├── data/                        # 数据层
-│   └── data_fetcher.py          # 数据获取器（YFinance / MT5）
-├── execution/                   # 实盘执行
-│   └── mt5_trader.py            # MetaTrader5 交易接口（仅 Windows）
-├── factors/                     # 因子计算
-│   └── technical_indicators.py  # RSI、MACD、SMA、ATR 等技术指标
-├── strategies/                  # 交易策略
-│   ├── dual_ma_strategy.py      # 双均线策略
-│   ├── enhanced_ma_strategy.py  # 增强均线策略
-│   ├── swing_strategy.py        # 波段策略
-│   ├── optimized_swing.py       # 优化波段策略 V1
-│   └── optimized_swing_v2.py    # 优化波段策略 V2
-├── output/                      # 分析结果输出目录（.gitignore）
-├── main.py                      # 项目主入口
-├── run_channel_analysis.py      # 多级别通道分析脚本
-├── run_backtest.py              # 基础回测脚本
-├── run_4h_backtest.py           # 4H 周期回测
-├── run_daily_backtest.py        # 日线回测
-├── run_long_backtest.py         # 25 年长期回测
-├── run_swing_backtest.py        # 波段策略回测
-├── run_optimized_backtest.py    # 优化策略回测
-├── run_optimized_v2_backtest.py # 优化策略 V2 回测
-├── test_integration.py          # 集成测试
-├── requirements.txt             # Python 依赖
+├── analysis/                    # Channel analysis module
+│   ├── channel_analyzer.py      # Multi-timeframe analyzer (aggregates strategies + consensus)
+│   └── strategies.py            # 4 channel analysis strategies
+├── backtest/                    # Backtesting engine
+│   └── engine.py                # Backtrader-based engine wrapper
+├── data/                        # Data layer
+│   └── data_fetcher.py          # Data fetchers (YFinance / MT5)
+├── execution/                   # Live execution
+│   └── mt5_trader.py            # MetaTrader5 trading interface (Windows only)
+├── factors/                     # Factor computation
+│   └── technical_indicators.py  # RSI, MACD, SMA, ATR, etc.
+├── strategies/                  # Trading strategies
+│   ├── dual_ma_strategy.py      # Dual moving average strategy
+│   ├── enhanced_ma_strategy.py  # Enhanced MA strategy
+│   ├── swing_strategy.py        # Swing trading strategy
+│   ├── optimized_swing.py       # Optimized swing V1
+│   └── optimized_swing_v2.py    # Optimized swing V2
+├── output/                      # Analysis output directory (.gitignore)
+├── main.py                      # Main entry point
+├── run_channel_analysis.py      # Multi-timeframe channel analysis script
+├── run_backtest.py              # Basic backtest
+├── run_4h_backtest.py           # 4H timeframe backtest
+├── run_daily_backtest.py        # Daily timeframe backtest
+├── run_long_backtest.py         # 25-year long-term backtest
+├── run_swing_backtest.py        # Swing strategy backtest
+├── run_optimized_backtest.py    # Optimized strategy backtest
+├── run_optimized_v2_backtest.py # Optimized V2 backtest
+├── test_integration.py          # Integration tests
+├── requirements.txt             # Python dependencies
 └── .gitignore
 ```
 
 ---
 
-## ⚙️ 环境配置
+## ⚙️ Environment Setup
 
-### 1. 创建 Conda 环境
+### 1. Create Conda Environment
 
 ```bash
 conda create -n gold_quant python=3.11 -y
 conda activate gold_quant
 ```
 
-### 2. 安装依赖
+### 2. Install Dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-**依赖列表：**
+**Dependencies:**
 
-| 包 | 用途 |
+| Package | Purpose |
 |---|---|
-| `pandas` | 数据处理 |
-| `numpy` | 数值计算 |
-| `ta` | 技术指标计算（ADX、布林带、唐奇安等） |
-| `backtrader` | 回测引擎 |
-| `yfinance` | Yahoo Finance 数据源 |
-| `python-dotenv` | 环境变量管理 |
+| `pandas` | Data processing |
+| `numpy` | Numerical computation |
+| `ta` | Technical indicators (ADX, Bollinger Bands, Donchian, etc.) |
+| `backtrader` | Backtesting engine |
+| `yfinance` | Yahoo Finance data source |
+| `python-dotenv` | Environment variable management |
 
-> **注意：** `MetaTrader5` 仅支持 Windows 平台，Linux 下使用 `yfinance` 作为数据源替代。
+> **Note:** `MetaTrader5` is Windows-only. On Linux, `yfinance` is used as the data source.
 
-### 3. 环境变量（可选）
+### 3. Environment Variables (Optional)
 
-创建 `.env` 文件用于存放配置（如 MT5 账号信息等）：
+Create a `.env` file for configuration (e.g., MT5 account credentials):
 
 ```bash
-cp .env.example .env  # 按需编辑
+cp .env.example .env  # Edit as needed
 ```
 
 ---
 
-## 🚀 功能介绍
+## 🚀 Features
 
-### 一、多级别多策略通道分析
+### 1. Multi-Timeframe Multi-Strategy Channel Analysis
 
-对黄金价格数据在 **1H / 4H / 日线 / 周线** 四个时间级别上，使用 **4 种独立策略** 进行通道类型判定，并汇总**多策略共识**。
+Analyzes gold price data across **1H / 4H / Daily / Weekly** timeframes using **4 independent strategies**, then aggregates results into a **multi-strategy consensus**.
 
-#### 4 种分析策略
+#### 4 Analysis Strategies
 
-| 策略 | 参数名 | 核心方法 | 适合场景 |
+| Strategy | CLI Name | Core Method | Best For |
 |---|---|---|---|
-| **线性回归通道** | `regression` | 回归斜率 + R² + ADX | 趋势强度量化 |
-| **布林带通道** | `bollinger` | SMA(20) ± 2σ，带宽 + %B | 波动性 + 超买超卖 |
-| **唐奇安通道** | `donchian` | N 周期最高/最低价 | 突破型交易 |
-| **高低点趋势线** | `trendline` | 局部极值连线回归 | 最贴近手动画线 |
+| **Linear Regression** | `regression` | Regression slope + R² + ADX | Trend strength quantification |
+| **Bollinger Bands** | `bollinger` | SMA(20) ± 2σ, bandwidth + %B | Volatility + overbought/oversold |
+| **Donchian Channel** | `donchian` | N-period highest high / lowest low | Breakout confirmation |
+| **Trendline** | `trendline` | Pivot high/low regression | Closest to manual chart drawing |
 
-#### 通道类型
+#### Channel Types
 
-| 类型 | 判定条件 |
+| Type | Condition |
 |---|---|
-| 📈 上涨通道 | 趋势指标向上 + 趋势强度达标 |
-| 📉 下跌通道 | 趋势指标向下 + 趋势强度达标 |
-| ↔️ 横盘震荡 | 趋势不明确或强度不足 |
-| 🔄 趋势转换中 | 方向初现但强度未达标 |
+| 📈 Uptrend Channel | Positive trend indicators + sufficient strength |
+| 📉 Downtrend Channel | Negative trend indicators + sufficient strength |
+| ↔️ Sideways / Ranging | No clear trend or insufficient strength |
+| 🔄 Transitioning | Direction emerging but strength not confirmed |
 
-#### 使用方法
+#### Usage
 
 ```bash
-# 运行全部策略
+# Run all strategies (default)
 conda run -n gold_quant python run_channel_analysis.py
 
-# 指定单个策略
+# Select a single strategy
 conda run -n gold_quant python run_channel_analysis.py --strategy bollinger
 
-# 指定多个策略（逗号分隔）
+# Select multiple strategies (comma-separated)
 conda run -n gold_quant python run_channel_analysis.py --strategy regression,donchian
 
-# 指定其他品种
-conda run -n gold_quant python run_channel_analysis.py --symbol SI=F  # 白银
+# Analyze a different symbol
+conda run -n gold_quant python run_channel_analysis.py --symbol SI=F  # Silver
 ```
 
-#### 输出示例
+#### Sample Output
 
 ```
 ╔══════════════════════════════════════════════════════════════╗
-║           XAUUSD 多级别 · 多策略通道分析报告                    ║
+║         XAUUSD Multi-Timeframe · Multi-Strategy Report       ║
 ╠══════════════════════════════════════════════════════════════╣
-║  📊 1H（日内）                                                ║
-║     线性回归     ↔️  横盘震荡  位置:59%  5298/5062              ║
-║     布林带       ↔️  横盘震荡  位置:41%  5237/5176              ║
-║     唐奇安       ↔️  横盘震荡  位置:50%  5237/5163              ║
-║     高低点趋势线  🔄 趋势转换中  位置:68%  5225/5149              ║
-║     ── 共识: 🔄 分歧 (0涨/0跌/4其他)                            ║
+║  📊 1H (Intraday)                                            ║
+║     Regression  ↔️ Sideways   Pos:59%  5298/5062              ║
+║     Bollinger   ↔️ Sideways   Pos:41%  5237/5176              ║
+║     Donchian    ↔️ Sideways   Pos:50%  5237/5163              ║
+║     Trendline   🔄 Transition Pos:68%  5225/5149              ║
+║     ── Consensus: 🔄 Mixed (0 up / 0 down / 4 other)         ║
 ║  ...                                                         ║
-║  📊 周线（长期）                                                ║
-║     线性回归     📈 上涨通道     布林带  📈 上涨通道               ║
-║     ── 共识: 📈 偏多 (3/4 看涨)                                 ║
+║  📊 Weekly (Long-term)                                       ║
+║     ── Consensus: 📈 Bullish (3/4 strategies agree)          ║
 ╚══════════════════════════════════════════════════════════════╝
 ```
 
-分析结果以带时间戳的 JSON 文件保存至 `output/` 目录，文件名格式：
+Results are saved as timestamped JSON files in `output/`:
 ```
 output/channel_gcf_20260226_152500_all.json
 ```
 
 ---
 
-### 二、策略回测系统
+### 2. Strategy Backtesting
 
-基于 **Backtrader** 引擎，支持多种交易策略在不同时间周期上的历史回测。
+Built on the **Backtrader** engine, supports multiple trading strategies across different timeframes.
 
-#### 可用策略
+#### Available Strategies
 
-| 策略 | 说明 | 回测脚本 |
+| Strategy | Description | Script |
 |---|---|---|
-| 双均线策略 | SMA 金叉/死叉 | `run_backtest.py` |
-| 增强均线策略 | 均线 + 动量过滤 | `run_optimized_backtest.py` |
-| 波段策略 | 趋势跟踪 + 波段捕捉 | `run_swing_backtest.py` |
-| 优化波段 V2 | 改进止损 + 做空 | `run_optimized_v2_backtest.py` |
+| Dual MA | SMA golden/death cross | `run_backtest.py` |
+| Enhanced MA | MA + momentum filter | `run_optimized_backtest.py` |
+| Swing Trading | Trend following + swing capture | `run_swing_backtest.py` |
+| Optimized Swing V2 | Improved stops + short selling | `run_optimized_v2_backtest.py` |
 
-#### 支持的回测周期
+#### Backtesting Timeframes
 
-| 脚本 | 周期 | 说明 |
+| Script | Timeframe | Description |
 |---|---|---|
-| `run_backtest.py` | 1H | 短周期快速验证 |
-| `run_4h_backtest.py` | 4H | 中周期波段 |
-| `run_daily_backtest.py` | 日线 | 中长期趋势 |
-| `run_long_backtest.py` | 日线 25 年 | 超长期稳健性验证 |
+| `run_backtest.py` | 1H | Quick short-period verification |
+| `run_4h_backtest.py` | 4H | Medium-period swing trading |
+| `run_daily_backtest.py` | Daily | Medium-to-long-term trends |
+| `run_long_backtest.py` | Daily (25 years) | Long-term robustness validation |
 
-#### 使用方法
+#### Usage
 
 ```bash
-# 运行回测（以波段策略为例）
+# Run a backtest (e.g., swing strategy)
 conda run -n gold_quant python run_swing_backtest.py
 
-# 查看回测结果
+# View results
 cat output/gold_swing_backtest.json
 ```
 
-回测报告包含：收益率、Sharpe 比率、最大回撤、交易次数、胜率等核心指标。
+Backtest reports include: return rate, Sharpe ratio, max drawdown, trade count, win rate, and other key metrics.
 
 ---
 
-### 三、数据获取
+### 3. Data Acquisition
 
-- **YFinance 数据源（默认）**：通过 `yfinance` 获取 `GC=F`（黄金期货）的 OHLCV 数据，支持 1m 到 1wk 多种周期，跨平台可用
-- **MT5 数据源（可选）**：通过 MetaTrader5 API 获取 `XAUUSD` 实时数据，仅支持 Windows
+- **YFinance (default):** Fetches `GC=F` (Gold Futures) OHLCV data via `yfinance`. Supports 1m to 1wk intervals. Cross-platform.
+- **MT5 (optional):** Fetches `XAUUSD` real-time data via MetaTrader5 API. Windows only.
 
 ```python
 from data.data_fetcher import YFinanceDataFetcher
@@ -198,46 +199,46 @@ df = fetcher.fetch_ohlcv(period="1y", interval="1d")
 
 ---
 
-### 四、技术指标
+### 4. Technical Indicators
 
-`factors/technical_indicators.py` 提供一键计算全部技术指标：
+`factors/technical_indicators.py` provides one-call computation of all indicators:
 
-- **趋势指标**：SMA（多周期）、EMA、MACD
-- **动量指标**：RSI
-- **波动性指标**：ATR、布林带
-- **趋势强度**：ADX
-
----
-
-### 五、实盘交易接口（仅 Windows）
-
-通过 `execution/mt5_trader.py` 对接 MetaTrader5，支持：
-
-- 账户信息查询
-- 市价单 / 挂单下单
-- 持仓管理与平仓
-- 止损/止盈设置
-
-> ⚠️ **警告：** 实盘交易涉及真实资金风险，使用前请在模拟账户中充分测试。
+- **Trend:** SMA (multiple periods), EMA, MACD
+- **Momentum:** RSI
+- **Volatility:** ATR, Bollinger Bands
+- **Trend Strength:** ADX
 
 ---
 
-## 📊 快速开始
+### 5. Live Trading Interface (Windows Only)
+
+`execution/mt5_trader.py` interfaces with MetaTrader5:
+
+- Account info query
+- Market / pending order placement
+- Position management & closing
+- Stop-loss / take-profit configuration
+
+> ⚠️ **Warning:** Live trading involves real financial risk. Always test thoroughly on a demo account first.
+
+---
+
+## 📊 Quick Start
 
 ```bash
-# 1. 克隆项目
+# 1. Clone the repository
 git clone git@github.com:Br0wn2000/Gold_Quant_Project.git
 cd Gold_Quant_Project
 
-# 2. 配置环境
+# 2. Setup environment
 conda create -n gold_quant python=3.11 -y
 conda activate gold_quant
 pip install -r requirements.txt
 
-# 3. 运行通道分析
+# 3. Run channel analysis
 python run_channel_analysis.py
 
-# 4. 运行策略回测
+# 4. Run strategy backtest
 python run_swing_backtest.py
 ```
 
@@ -245,4 +246,4 @@ python run_swing_backtest.py
 
 ## 📄 License
 
-本项目仅供学习和研究用途，不构成任何投资建议。
+This project is for educational and research purposes only. It does not constitute investment advice.
