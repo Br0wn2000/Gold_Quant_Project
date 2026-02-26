@@ -1,0 +1,7 @@
+pandas
+numpy
+# MetaTrader5  # 仅支持 Windows 平台，Linux 下请跳过或使用 Wine 环境
+ta              # 技术指标计算库（替代 pandas-ta，兼容 Python 3.11+）
+backtrader
+python-dotenv
+yfinance        # Yahoo Finance 数据源（Linux 下替代 MT5 获取历史数据）
